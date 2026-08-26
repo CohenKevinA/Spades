@@ -1,0 +1,15 @@
+# Normalize line endings for text files; let Git handle CRLF/LF conversion
+* text=auto eol=lf
+
+*.html text
+*.css text
+*.js text
+*.md text
+.gitignore text
+.gitattributes text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
