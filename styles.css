@@ -445,7 +445,7 @@ button {
   width: calc(var(--card-w) * 0.62);
   height: calc(var(--card-h) * 0.62);
   border-radius: 5px;
-  margin-left: -30px;
+  margin-left: calc(var(--card-w) * -0.341);
   background-color: var(--card-back);
   background-image:
     radial-gradient(circle at 50% 42%, rgba(255,255,255,0.06), transparent 65%),
@@ -458,7 +458,7 @@ button {
 }
 .opp-card:first-child { margin-left: 0; }
 .seat-left .opp-cards, .seat-right .opp-cards { flex-direction: column; }
-.seat-left .opp-card, .seat-right .opp-card { margin-left: 0; margin-top: -46px; }
+.seat-left .opp-card, .seat-right .opp-card { margin-left: 0; margin-top: calc(var(--card-h) * -0.372); }
 .seat-left .opp-card:first-child, .seat-right .opp-card:first-child { margin-top: 0; }
 
 .trick-pile {
@@ -891,6 +891,15 @@ button {
     min-height: 340px;
   }
   .felt-zone { height: 150px; }
+  .seat-left .seat-label, .seat-right .seat-label {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .seat-left .seat-name, .seat-right .seat-name {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+  }
   .hud { flex-direction: row; align-items: center; }
   .tally-board { min-width: 130px; transform: none; }
   .scorepad {
