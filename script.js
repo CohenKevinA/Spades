@@ -70,6 +70,25 @@ const state = {
   targetScore: 500,
 };
 
+/* ------------------------------------------------------------- storage -- */
+
+const STORAGE_KEY = 'spades-game-v1';
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+function loadSavedState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 /* ---------------------------------------------------------------- deck -- */
 
 function buildDeck() {
@@ -340,6 +359,7 @@ function playCard(seat, idx) {
   } else {
     scheduleNextPlayer();
   }
+  saveState();
 }
 
 function determineWinner() {
@@ -373,6 +393,7 @@ function resolveTrickFlow() {
     const handsEmpty = Object.values(state.hands).every((h) => h.length === 0);
     if (handsEmpty) endHand();
     else scheduleNextPlayer();
+    saveState();
   }, 520);
 }
 
@@ -494,6 +515,7 @@ els.bidConfirm.addEventListener('click', () => {
   const first = seq[0];
   if (first === 'you') enableLegalCardsForYou();
   else setTimeout(() => botPlay(first), 500);
+  saveState();
 });
 
 function startBidding() {
@@ -519,6 +541,7 @@ function startNewRound() {
   assignBotBids();
   renderAllHands(true);
   startBidding();
+  saveState();
 }
 
 /* ------------------------------------------------------------- overlay -- */
@@ -547,6 +570,7 @@ function startGame() {
   state.tricksTaken = { you: 0, left: 0, top: 0, right: 0 };
   state.spadesBroken = false;
   state.bids = {};
+  state.currentTrick = [];
 
   els.roundNum.textContent = state.round;
   els.scoreUs.textContent = 0;
@@ -566,14 +590,65 @@ function startGame() {
   assignBotBids();
   renderAllHands(true);
   startBidding();
+  saveState();
 }
 
 els.overlayStartBtn.addEventListener('click', startGame);
 
+/* -------------------------------------------------------------- resume - */
+
+function restoreState(saved) {
+  Object.assign(state, saved);
+
+  els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
+  els.brokenTag.dataset.broken = String(state.spadesBroken);
+  els.brokenTag.textContent = state.spadesBroken ? 'Spades broken' : 'Spades not broken';
+  els.roundNum.textContent = state.round;
+  els.scoreUs.textContent = state.teamScore.us;
+  els.scoreThem.textContent = state.teamScore.them;
+  renderTally(state.teamBags.us);
+  els.targetScoreInput.value = state.targetScore;
+  renderAllHands(false);
+  state.currentTrick.forEach(({ seat, card }) => renderTrickCard(seat, card));
+
+  const winner = decideGameWinner();
+  if (winner) {
+    showGameOver(winner);
+    return;
+  }
+  els.gameOverlay.hidden = true;
+
+  if (Object.values(state.hands).every((h) => h.length === 0)) {
+    startNewRound();
+    return;
+  }
+
+  if (state.bids.you === undefined) {
+    startBidding();
+    return;
+  }
+
+  ORDER.forEach((s) => {
+    els.bidPill[s].textContent = state.bids[s] === 'nil' ? 'Nil' : state.bids[s];
+  });
+  els.bidSlip.hidden = true;
+
+  if (state.currentTrick.length === 4) {
+    resolveTrickFlow();
+  } else {
+    scheduleNextPlayer();
+  }
+}
+
 function init() {
   buildBidGrid();
-  renderTally(0);
-  els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
+  const saved = loadSavedState();
+  if (saved) {
+    restoreState(saved);
+  } else {
+    renderTally(0);
+    els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
+  }
 }
 
 init();
