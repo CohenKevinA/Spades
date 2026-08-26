@@ -21,11 +21,39 @@
         <h2 id="overlayTitle">Spades</h2>
         <p id="overlaySubtitle">First team to the target score wins.</p>
         <div class="overlay-result" id="overlayResult" hidden></div>
+        <button class="overlay-recap" id="overlayRecapBtn" type="button" hidden>Full recap</button>
         <label class="target-field" for="targetScoreInput">
           Target score
           <input type="number" id="targetScoreInput" min="50" step="50" value="500" />
         </label>
         <button class="overlay-start" id="overlayStartBtn" type="button">Start game</button>
+      </div>
+    </div>
+
+    <div class="history-overlay" id="historyOverlay" hidden>
+      <div class="history-card">
+        <div class="history-head">
+          <h2>Scoresheet</h2>
+          <button class="history-close" id="historyCloseBtn" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="history-scroll">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Rd</th>
+                <th>Bid</th>
+                <th>Books</th>
+                <th>Bags</th>
+                <th>Score</th>
+              </tr>
+              <tr class="history-legend">
+                <th></th>
+                <th colspan="4">You+Priya / M+Dana</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -63,11 +91,11 @@
         <div class="round-banner" id="roundBanner"></div>
       </div>
 
-      <div class="scorepad" id="scorepad">
+      <button class="scorepad" id="scorepad" type="button" aria-label="Open scoresheet">
         <div class="row"><span class="team-name">You+Priya</span><span id="scoreUs">0</span></div>
         <div class="row"><span class="team-name">M+Dana</span><span id="scoreThem">0</span></div>
         <div class="row total"><span>Round</span><span id="roundNum">1</span></div>
-      </div>
+      </button>
 
       <div class="seat seat-bottom your-seat" id="seatBottom">
         <div class="bid-slip" id="bidSlip">

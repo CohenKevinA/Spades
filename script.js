@@ -51,8 +51,13 @@ const els = {
   overlayTitle: document.getElementById('overlayTitle'),
   overlaySubtitle: document.getElementById('overlaySubtitle'),
   overlayResult: document.getElementById('overlayResult'),
+  overlayRecapBtn: document.getElementById('overlayRecapBtn'),
   targetScoreInput: document.getElementById('targetScoreInput'),
   overlayStartBtn: document.getElementById('overlayStartBtn'),
+  scorepad: document.getElementById('scorepad'),
+  historyOverlay: document.getElementById('historyOverlay'),
+  historyBody: document.getElementById('historyBody'),
+  historyCloseBtn: document.getElementById('historyCloseBtn'),
 };
 
 const state = {
@@ -68,6 +73,7 @@ const state = {
   currentTrick: [],
   selectedBid: null,
   targetScore: 500,
+  history: [],
 };
 
 /* ------------------------------------------------------------- storage -- */
@@ -222,6 +228,39 @@ function renderTally(count) {
   }
   els.bagCount.textContent = `${count} / 10`;
 }
+
+/* ------------------------------------------------------------ history -- */
+
+function renderHistory() {
+  els.historyBody.innerHTML = '';
+  state.history.forEach((row) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.round}</td>
+      <td>${row.bid.us}/${row.bid.them}</td>
+      <td>${row.books.us}/${row.books.them}</td>
+      <td>${row.bags.us}/${row.bags.them}</td>
+      <td>${row.score.us}/${row.score.them}</td>
+    `;
+    els.historyBody.appendChild(tr);
+  });
+}
+
+function openHistory() {
+  renderHistory();
+  els.historyOverlay.hidden = false;
+}
+
+function closeHistory() {
+  els.historyOverlay.hidden = true;
+}
+
+els.scorepad.addEventListener('click', openHistory);
+els.overlayRecapBtn.addEventListener('click', openHistory);
+els.historyCloseBtn.addEventListener('click', closeHistory);
+els.historyOverlay.addEventListener('click', (e) => {
+  if (e.target === els.historyOverlay) closeHistory();
+});
 
 function triggerBlot() {
   els.tallyBlot.classList.remove('show');
@@ -415,7 +454,9 @@ function computeTeamResult(teamSeats) {
     if (!madeNil) bags += state.tricksTaken[s];
   });
 
-  return { base, bags };
+  const books = teamTricks + nilSeats.reduce((sum, s) => sum + state.tricksTaken[s], 0);
+
+  return { base, bags, bid: teamBid, books };
 }
 
 function endHand() {
@@ -442,6 +483,14 @@ function endHand() {
   renderTally(state.teamBags.us);
   els.scoreUs.textContent = state.teamScore.us;
   els.scoreThem.textContent = state.teamScore.them;
+
+  state.history.push({
+    round: state.round,
+    bid: { us: us.bid, them: them.bid },
+    books: { us: us.books, them: them.books },
+    bags: { us: state.teamBags.us, them: state.teamBags.them },
+    score: { us: state.teamScore.us, them: state.teamScore.them },
+  });
 
   let resultText = us.base >= 0 ? `+${us.base}` : `${us.base}`;
   if (state.bids.you === 'nil') {
@@ -554,6 +603,7 @@ function showGameOver(winner) {
   els.overlayResult.hidden = false;
   els.overlayResult.textContent =
     `You + Priya ${state.teamScore.us} · Marcus + Dana ${state.teamScore.them} (target ${state.targetScore})`;
+  els.overlayRecapBtn.hidden = false;
   els.overlayStartBtn.textContent = 'New game';
   els.gameOverlay.hidden = false;
 }
@@ -571,11 +621,13 @@ function startGame() {
   state.spadesBroken = false;
   state.bids = {};
   state.currentTrick = [];
+  state.history = [];
 
   els.roundNum.textContent = state.round;
   els.scoreUs.textContent = 0;
   els.scoreThem.textContent = 0;
   renderTally(0);
+  els.overlayRecapBtn.hidden = true;
   els.brokenTag.dataset.broken = 'false';
   els.brokenTag.textContent = 'Spades not broken';
   els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
