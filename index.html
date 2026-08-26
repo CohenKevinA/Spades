@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,600&family=Karla:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="table">
+  <div class="table-wood">
+    <span class="tack-tl" aria-hidden="true"></span>
+    <span class="tack-tr" aria-hidden="true"></span>
+
+    <div class="game-overlay" id="gameOverlay">
+      <div class="overlay-card">
+        <h2 id="overlayTitle">Spades</h2>
+        <p id="overlaySubtitle">First team to the target score wins.</p>
+        <div class="overlay-result" id="overlayResult" hidden></div>
+        <label class="target-field" for="targetScoreInput">
+          Target score
+          <input type="number" id="targetScoreInput" min="50" step="50" value="500" />
+        </label>
+        <button class="overlay-start" id="overlayStartBtn" type="button">Start game</button>
+      </div>
+    </div>
+
+    <header class="hud">
+      <div class="hud-left">
+        <span class="dealer-tag" id="dealerTag">Dealer: You</span>
+        <span class="spades-broken" id="brokenTag" data-broken="false">Spades not broken</span>
+      </div>
+      <h1 class="wordmark">Spades</h1>
+      <div class="tally-board" aria-label="Bag tally">
+        <div class="tally-label"><span>Bags</span><span id="bagCount">0 / 10</span></div>
+        <div class="tally-marks" id="tallyMarks"></div>
+        <div class="tally-blot" id="tallyBlot"></div>
+      </div>
+    </header>
+
+    <div class="rig">
+      <div class="seat seat-top" id="seatTop">
+        <span class="seat-label"><span class="turn-dot"></span>Priya <span class="bid-pill" id="bidTop">—</span></span>
+        <div class="opp-cards" id="cardsTop"></div>
+      </div>
+
+      <div class="seat seat-left" id="seatLeft">
+        <span class="seat-label"><span class="turn-dot"></span>Marcus <span class="bid-pill" id="bidLeft">—</span></span>
+        <div class="opp-cards" id="cardsLeft"></div>
+      </div>
+
+      <div class="seat seat-right" id="seatRight">
+        <span class="seat-label"><span class="turn-dot"></span>Dana <span class="bid-pill" id="bidRight">—</span></span>
+        <div class="opp-cards" id="cardsRight"></div>
+      </div>
+
+      <div class="felt-zone" aria-live="polite">
+        <div class="trick-cards" id="trickCards"></div>
+        <div class="round-banner" id="roundBanner"></div>
+      </div>
+
+      <div class="scorepad" id="scorepad">
+        <div class="row"><span class="team-name">You+Priya</span><span id="scoreUs">0</span></div>
+        <div class="row"><span class="team-name">M+Dana</span><span id="scoreThem">0</span></div>
+        <div class="row total"><span>Round</span><span id="roundNum">1</span></div>
+      </div>
+
+      <div class="seat seat-bottom your-seat" id="seatBottom">
+        <div class="bid-slip" id="bidSlip">
+          <h2>Your bid</h2>
+          <p>Tricks you'll take this hand — or call it.</p>
+          <div class="bid-grid" id="bidGrid"></div>
+          <button class="bid-nil" id="bidNilBtn" type="button">Nil</button>
+          <button class="bid-confirm" id="bidConfirm" type="button" disabled>Lock in bid</button>
+        </div>
+        <span class="seat-label"><span class="turn-dot"></span>You <span class="bid-pill" id="bidYou">—</span></span>
+        <div class="hand" id="yourHand"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
