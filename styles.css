@@ -476,10 +476,10 @@ button {
   height: 100%;
 }
 
-.trick-card {
+.card.trick-card {
   position: absolute;
   top: 50%; left: 50%;
-  animation: land 0.32s var(--ease-settle) backwards;
+  animation: land 0.32s var(--ease-settle) both;
 }
 @keyframes land {
   from { opacity: 0; transform: translate(-50%,-50%) scale(0.6) translateY(-40px) var(--rot, rotate(0deg)); }
