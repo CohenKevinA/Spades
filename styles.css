@@ -87,6 +87,7 @@ button {
   z-index: 1;
   min-height: 100vh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding: clamp(0.75rem, 2vw, 2rem);
 }
@@ -443,7 +444,7 @@ button {
 
 .rig {
   display: grid;
-  grid-template-columns: 90px 1fr 90px;
+  grid-template-columns: 90px minmax(0, 1fr) 90px;
   grid-template-rows: auto 1fr auto;
   gap: 0.5rem 0;
   align-items: center;
@@ -754,7 +755,7 @@ button {
 
 @media (max-width: 720px) {
   .rig {
-    grid-template-columns: 56px 1fr 56px;
+    grid-template-columns: 56px minmax(0, 1fr) 56px;
     min-height: 340px;
   }
   .felt-zone { height: 150px; }
@@ -764,6 +765,6 @@ button {
 }
 
 @media (max-width: 480px) {
-  .rig { grid-template-columns: 40px 1fr 40px; }
+  .rig { grid-template-columns: 40px minmax(0, 1fr) 40px; }
   .seat-label { font-size: 0.6rem; }
 }
