@@ -37,6 +37,12 @@ const els = {
     top: document.getElementById('bidTop'),
     right: document.getElementById('bidRight'),
   },
+  trickPile: {
+    you: document.getElementById('pileYou'),
+    left: document.getElementById('pileLeft'),
+    top: document.getElementById('pileTop'),
+    right: document.getElementById('pileRight'),
+  },
   trickCards: document.getElementById('trickCards'),
   roundBanner: document.getElementById('roundBanner'),
   scoreUs: document.getElementById('scoreUs'),
@@ -229,6 +235,23 @@ function renderTally(count) {
   els.bagCount.textContent = `${count} / 10`;
 }
 
+/* ---------------------------------------------------------- trick pile - */
+
+function renderTrickPile(seat) {
+  const pile = els.trickPile[seat];
+  pile.innerHTML = '';
+  for (let i = 0; i < state.tricksTaken[seat]; i++) {
+    const card = document.createElement('div');
+    card.className = 'pile-card';
+    card.style.setProperty('--jitter', `${(i * 37) % 11 - 5}deg`);
+    pile.appendChild(card);
+  }
+}
+
+function renderAllTrickPiles() {
+  ORDER.forEach(renderTrickPile);
+}
+
 /* ------------------------------------------------------------ history -- */
 
 function renderHistory() {
@@ -411,6 +434,7 @@ function determineWinner() {
 function resolveTrickFlow() {
   const winner = determineWinner();
   state.tricksTaken[winner]++;
+  renderTrickPile(winner);
   showBanner(`${NAMES[winner]} takes it`, 850);
 
   const sweepTo = {
@@ -585,6 +609,7 @@ function startNewRound() {
   els.brokenTag.dataset.broken = 'false';
   els.brokenTag.textContent = 'Spades not broken';
   els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
+  renderAllTrickPiles();
 
   deal();
   assignBotBids();
@@ -627,6 +652,7 @@ function startGame() {
   els.scoreUs.textContent = 0;
   els.scoreThem.textContent = 0;
   renderTally(0);
+  renderAllTrickPiles();
   els.overlayRecapBtn.hidden = true;
   els.brokenTag.dataset.broken = 'false';
   els.brokenTag.textContent = 'Spades not broken';
@@ -659,6 +685,7 @@ function restoreState(saved) {
   els.scoreUs.textContent = state.teamScore.us;
   els.scoreThem.textContent = state.teamScore.them;
   renderTally(state.teamBags.us);
+  renderAllTrickPiles();
   els.targetScoreInput.value = state.targetScore;
   renderAllHands(false);
   state.currentTrick.forEach(({ seat, card }) => renderTrickCard(seat, card));

@@ -461,6 +461,32 @@ button {
 .seat-left .opp-card, .seat-right .opp-card { margin-left: 0; margin-top: -46px; }
 .seat-left .opp-card:first-child, .seat-right .opp-card:first-child { margin-top: 0; }
 
+.trick-pile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  min-height: calc(var(--card-h) * 0.24);
+  width: 100%;
+}
+.pile-card {
+  width: calc(var(--card-w) * 0.3);
+  height: calc(var(--card-h) * 0.3);
+  border-radius: 3px;
+  margin-left: calc(var(--card-w) * -0.16);
+  background-color: var(--card-back);
+  background-image:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,0.06), transparent 65%),
+    url('assets/allen-busby-crest.png');
+  background-repeat: no-repeat;
+  background-position: center 46%;
+  background-size: 72%;
+  border: 1px solid rgba(201,162,39,0.4);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  transform: rotate(var(--jitter, 0deg));
+}
+.pile-card:first-child { margin-left: 0; }
+
 .rig {
   display: grid;
   grid-template-columns: 90px minmax(0, 1fr) 90px;
