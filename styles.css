@@ -915,8 +915,12 @@ button {
 }
 
 @media (max-width: 480px) {
-  :root { --card-w: clamp(30px, 9vw, 42px); }
+  :root { --card-w: clamp(26px, 8vw, 42px); }
   .rig { grid-template-columns: 40px minmax(0, 1fr) 40px; }
   .hand .card { margin-left: calc(var(--card-w) * -0.52); }
   .seat-label { font-size: 0.6rem; }
+}
+
+@media (max-width: 380px) {
+  :root { --card-w: clamp(22px, 7.5vw, 34px); }
 }
