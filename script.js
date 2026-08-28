@@ -64,6 +64,10 @@ const els = {
   historyOverlay: document.getElementById('historyOverlay'),
   historyBody: document.getElementById('historyBody'),
   historyCloseBtn: document.getElementById('historyCloseBtn'),
+  exitBtn: document.getElementById('exitBtn'),
+  exitConfirmOverlay: document.getElementById('exitConfirmOverlay'),
+  exitCancelBtn: document.getElementById('exitCancelBtn'),
+  exitConfirmBtn: document.getElementById('exitConfirmBtn'),
 };
 
 const state = {
@@ -672,6 +676,63 @@ function startGame() {
 }
 
 els.overlayStartBtn.addEventListener('click', startGame);
+
+/* ---------------------------------------------------------------- exit -- */
+
+function openExitConfirm() {
+  els.exitConfirmOverlay.hidden = false;
+}
+
+function closeExitConfirm() {
+  els.exitConfirmOverlay.hidden = true;
+}
+
+function exitGame() {
+  closeExitConfirm();
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+
+  state.hands = { you: [], left: [], top: [], right: [] };
+  state.bids = {};
+  state.tricksTaken = { you: 0, left: 0, top: 0, right: 0 };
+  state.teamBags = { us: 0, them: 0 };
+  state.teamScore = { us: 0, them: 0 };
+  state.round = 1;
+  state.dealer = 'you';
+  state.leader = 'left';
+  state.spadesBroken = false;
+  state.currentTrick = [];
+  state.selectedBid = null;
+  state.history = [];
+
+  els.bidSlip.hidden = true;
+  els.trickCards.innerHTML = '';
+  setActiveSeat(null);
+  renderAllHands(false);
+  renderAllTrickPiles();
+  renderTally(0);
+  els.roundNum.textContent = state.round;
+  els.scoreUs.textContent = 0;
+  els.scoreThem.textContent = 0;
+  els.brokenTag.dataset.broken = 'false';
+  els.brokenTag.textContent = 'Spades not broken';
+  els.dealerTag.textContent = `Dealer: ${NAMES[state.dealer]}`;
+
+  els.overlayTitle.textContent = 'Spades';
+  els.overlaySubtitle.textContent = 'First team to the target score wins.';
+  els.overlayResult.hidden = true;
+  els.overlayRecapBtn.hidden = true;
+  els.overlayStartBtn.textContent = 'Start game';
+  els.gameOverlay.hidden = false;
+}
+
+els.exitBtn.addEventListener('click', openExitConfirm);
+els.exitCancelBtn.addEventListener('click', closeExitConfirm);
+els.exitConfirmBtn.addEventListener('click', exitGame);
+els.exitConfirmOverlay.addEventListener('click', (e) => {
+  if (e.target === els.exitConfirmOverlay) closeExitConfirm();
+});
 
 /* -------------------------------------------------------------- resume - */
 

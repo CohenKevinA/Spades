@@ -30,6 +30,17 @@
       </div>
     </div>
 
+    <div class="exit-confirm-overlay" id="exitConfirmOverlay" hidden>
+      <div class="exit-confirm-card">
+        <h2>Quit this game?</h2>
+        <p>Your progress will be lost.</p>
+        <div class="exit-confirm-actions">
+          <button class="exit-cancel" id="exitCancelBtn" type="button">Cancel</button>
+          <button class="exit-confirm" id="exitConfirmBtn" type="button">Quit</button>
+        </div>
+      </div>
+    </div>
+
     <div class="history-overlay" id="historyOverlay" hidden>
       <div class="history-card">
         <div class="history-head">
@@ -59,6 +70,7 @@
 
     <header class="hud">
       <div class="hud-left">
+        <button class="exit-btn" id="exitBtn" type="button" aria-label="Exit game">&times; Exit</button>
         <span class="dealer-tag" id="dealerTag">Dealer: You</span>
         <span class="spades-broken" id="brokenTag" data-broken="false">Spades not broken</span>
       </div>
